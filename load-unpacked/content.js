@@ -27,7 +27,9 @@ function download_table_as_csv(table_elm) {
             // console.log('cols[j].querySelectorAll(\'input\')'+cols[j].querySelectorAll('input').value);
             if (cols[j].querySelector('input') != null) {
               colText = cols[j].querySelector('input').value;
-            }else{
+            } else if (cols[j].querySelector('select') != null) {
+              colText = cols[j].querySelector('select').value;
+            } else{
               colText = cols[j].innerText;
             }
             console.log('colText: '+colText);
