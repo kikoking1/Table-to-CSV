@@ -24,15 +24,16 @@ function download_table_as_csv(table_elm) {
 
             // add support for inner input tags in tables.
             var colText = '';
-            // console.log('cols[j].querySelectorAll(\'input\')'+cols[j].querySelectorAll('input').value);
             if (cols[j].querySelector('input') != null) {
               colText = cols[j].querySelector('input').value;
             } else if (cols[j].querySelector('select') != null) {
               colText = cols[j].querySelector('select').value;
+            } else if (cols[j].querySelector('textarea') != null) {
+              colText = cols[j].querySelector('textarea').innerText;
             } else{
               colText = cols[j].innerText;
             }
-            console.log('colText: '+colText);
+
             // Clean innertext to remove multiple spaces and jumpline (break csv)
             var data = colText.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s\s)/gm, ' ')
             // Escape double-quote with double-double-quote (see https://stackoverflow.com/questions/17808511/properly-escape-a-double-quote-in-csv)
@@ -66,9 +67,7 @@ window.ready(function() {
         if (tableElmClicked.tagName.toLowerCase() == 'table' && event.shiftKey) {
           download_table_as_csv(tableElmClicked);
         }
-      } catch(e) {
-        console.log(e);
-      }
+      } catch(e) {}
       
     });
   
