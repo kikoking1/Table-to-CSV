@@ -11,15 +11,31 @@ function ready(fn) {
   }
 }
 
+function is_salesforce_query_editor_grid() {
+	if (document.querySelector('.x-grid-header-ct') != null) {
+		return true;
+	}
+	return false;
+}
+
 // evt.target
 // Turn html table to downloadable csv. Modified from stack overflow answer - https://stackoverflow.com/questions/15547198/export-html-table-to-csv#answer-56370447
 function download_table_as_csv(table_elm) {
     // Select rows from table_id
+	var firstRow = true;
     var rows = table_elm.querySelectorAll('tr');
     // Construct csv
     var csv = [];
     for (var i = 0; i < rows.length; i++) {
-        var row = [], cols = rows[i].querySelectorAll('td, th');
+
+        var row = [];
+		var cols = rows[i].querySelectorAll('td, th');
+
+		if (is_salesforce_query_editor_grid() && firstRow) { // salesforce query editor support
+			var queryGridHeaderRowElm = document.querySelector('.x-grid-header-ct');
+			cols = queryGridHeaderRowElm.querySelectorAll('.x-column-header-text');
+		}
+
         for (var j = 0; j < cols.length; j++) {
 
             // add support for inner input tags in tables.
@@ -42,6 +58,7 @@ function download_table_as_csv(table_elm) {
             row.push('"' + data + '"');
         }
         csv.push(row.join(','));
+		firstRow = false;
     }
     var csv_string = csv.join('\n');
     // Download it
